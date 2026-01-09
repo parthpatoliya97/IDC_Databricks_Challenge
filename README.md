@@ -1,4 +1,4 @@
-# IDC_Databricks_Challenge
+# IDC Databricks 14 Days AI Challeng
 
 
 ## Day 1 of Databricks 14 Days AI Challenge
