@@ -1,7 +1,7 @@
-# IDC Databricks AI Challenge
+# IDC Databricks 14 Days AI Challenge
 
 
-## Day 1 of Databricks 14 Days AI Challenge
+## Day 1 :
 
 - Today wasn’t just about creating an account or running Spark commands.
 - It was the day I truly understood why Databricks exists. At the start, I was honestly overwhelmed.
