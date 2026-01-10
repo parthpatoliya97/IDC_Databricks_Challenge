@@ -37,3 +37,5 @@
  - Once this clicked, Databricks started making sense as a platform, not just a tool.
 
 ------------------------------
+Day 2 :
+
