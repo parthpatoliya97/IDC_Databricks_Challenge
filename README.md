@@ -145,7 +145,7 @@ display(brand_metrics.limit(10))
 
 ```
 
-### Magical Keywords %python,%sql,%fs 
+### Magical Keywords %sql,%fs 
 
 ```sql
 %sql
