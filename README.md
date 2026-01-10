@@ -36,6 +36,94 @@
  - Understanding how compute, storage, and workspace are connected.
  - Once this clicked, Databricks started making sense as a platform, not just a tool.
 
+### Install Dependencies
+```python
+!pip install kaggle
+```
+
+### Configure Kaggle Credentials
+```python
+import os
+
+os.environ["KAGGLE_USERNAME"] = "user_name"
+os.environ["KAGGLE_KEY"] = "kaggle api key"
+
+print("Kaggle credentials configured!")
+```
+
+### Create Database Schema
+```python
+spark.sql("""
+CREATE SCHEMA IF NOT EXISTS workspace.ecommerce
+""")
+```
+
+### Create Volume for Data Storage
+```python
+spark.sql("""
+CREATE VOLUME IF NOT EXISTS workspace.ecommerce.ecommerce_data
+""")
+```
+
+### Download Dataset from Kaggle
+```bash
+%sh
+cd /Volumes/workspace/ecommerce/ecommerce_data
+kaggle datasets download -d mkechinov/ecommerce-behavior-data-from-multi-category-store
+```
+
+### Extract Downloaded Dataset
+```bash
+%sh
+cd /Volumes/workspace/ecommerce/ecommerce_data
+unzip -o ecommerce-behavior-data-from-multi-category-store.zip
+ls -lh
+```
+
+### Clean Up Zip File
+```bash
+%sh
+cd /Volumes/workspace/ecommerce/ecommerce_data
+rm -f ecommerce-behavior-data-from-multi-category-store.zip
+ls -lh
+```
+
+### Restart Python Environment
+```python
+%restart_python
+```
+
+### Load Oct 2019 Data
+```python
+oct_events = spark.read.csv(
+    "/Volumes/workspace/ecommerce/ecommerce_data/2019-Oct.csv",
+    header=True,
+    inferSchema=True
+)
+```
+
+### Load Nov 2019 Data
+```python
+nov_events = spark.read.csv(
+    "/Volumes/workspace/ecommerce/ecommerce_data/2019-Nov.csv",
+    header=True,
+    inferSchema=True
+)
+```
+
+### Quick View & Quality Check of Loaded Data in Volume
+```python
+print(f"October 2019 - Total Events: {oct_events.count():,}")
+oct_events.printSchema()
+
+oct_events.show(5, truncate=False)
+
+print(f"November 2019 - Total Events: {nov_events.count():,}")
+nov_events.printSchema()
+
+nov_events.show(5, truncate=False)
+```
+
 ------------------------------
 -----------------------------
 
