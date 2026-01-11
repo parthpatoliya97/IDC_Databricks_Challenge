@@ -288,7 +288,7 @@ len(files)
 -------------------------------
 --------------------------------
 
-Day 3 :
+## Day 3 :
 ### Sample Dataset for practise
 
 ```python
