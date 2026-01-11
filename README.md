@@ -284,3 +284,209 @@ head /Volumes/workspace/ecommerce/ecommerce_data/2019-Oct.csv
 files = dbutils.fs.ls("/Volumes/workspace/ecommerce/ecommerce_data")
 len(files)
 ```
+
+-------------------------------
+--------------------------------
+
+Day 3 :
+### Sample Dataset for practise
+
+```python
+# 1. Define the raw data as a list of tuples
+Salesdata = [
+    ("Prod001", 10, 300, "Virginia"),
+    ("Prod002", 20, 500, "Virginia"),
+    ("Prod003", 30, 460, "Virginia"),
+    ("Prod023", 30, 460, "Virginia"),
+    ("Prod004", 40, 987, "Virginia"),
+    ("Prod005", 40, 987, "Virginia"),
+    ("Prod001", 10, 1300, "Georgia"),
+    ("Prod002", 20, 550, "Georgia"),
+    ("Prod003", 30, 480, "Georgia"),
+    ("Prod004", 40, 240, "Georgia"),
+    ("Prod001", 10, 1100, "New York"),
+    ("Prod002", 20, 530, "New York")
+]
+
+# 2. Define the schema string
+SalesdataColumns = "product string, quantity int, salesamount int, state string"
+
+# 3. Create the DataFrame
+salesdf = spark.createDataFrame(data=Salesdata, schema=SalesdataColumns)
+
+# 4. Display the results
+salesdf.display()
+```
+
+```python
+from pyspark.sql.functions import *
+from pyspark.sql.window import Window
+
+window_criteria=Window.partitionBy("state").orderBy(desc("salesamount"))
+final_result = salesdf.withColumn("rank",rank().over(window_criteria))
+display(final_result)
+```
+
+```python
+final_result = salesdf.withColumn("rank_dense",dense_rank().over(window_criteria))
+display(final_result)
+```
+
+```python
+final_result = salesdf.withColumn("row_num",row_number().over(window_criteria))
+display(final_result)
+```
+
+```python
+final_result = salesdf.withColumn("previous_Value",lag("salesamount",1).over(window_criteria)) \
+                      .withColumn("next_Value",lead("salesamount",1).over(window_criteria))
+display(final_result)
+```
+
+```python
+window_criteria_2 = Window.partitionBy("state")
+final_result = (
+    salesdf
+    .withColumn("total_sales", sum("salesamount").over(window_criteria_2))
+    .withColumn("avg_sales", round(avg("salesamount").over(window_criteria_2), 2))
+    .withColumn("minimum_sales", min("salesamount").over(window_criteria_2))
+    .withColumn("maximum_sales", max("salesamount").over(window_criteria_2))
+)
+display(final_result.orderBy(desc("total_sales")))
+```
+
+```python
+append_events = oct_events.unionByName(nov_events)
+display(append_events.limit(10))
+```
+
+```python
+display("oct_events total rows : ",oct_events.count())
+display("nov_events total rows : ",nov_events.count())
+
+display("appnd_tables rows : ",append_events.count())
+```
+
+```python
+event_type_sales_million = (
+    append_events
+    .filter(col("event_type") == "purchase")
+    .groupBy("event_type")
+    .agg(
+        round(sum("price") / 1_000_000, 2).alias("total_sales_mn"),
+        round(count("*") / 1_000_000, 2).alias("total_orders_mn")
+    )
+)
+display(event_type_sales_million)
+```
+
+```python
+brand_sales = (
+    append_events
+    .filter(
+        (col("event_type") == "purchase") &
+        (col("brand").isNotNull())
+    )
+    .groupBy("brand")
+    .agg(
+        round(sum("price") / 1_000_000, 2).alias("total_sales_mn"),
+        count("*").alias("total_orders")
+    )
+)
+```
+
+```python
+display(brand_sales.orderBy(desc("total_sales_mn")))
+```
+
+```python
+window_spec = (
+    Window
+    .partitionBy("brand")
+    .orderBy("event_time")
+    .rowsBetween(Window.unboundedPreceding, Window.currentRow)
+)
+```
+
+```python
+running_sales_df = (
+    append_events
+    .filter(
+        (col("event_type") == "purchase") &
+        (col("brand").isNotNull())
+        )
+    .withColumn("running_sales", sum("price").over(window_spec))
+)
+```
+
+```python
+display(running_sales_df.select("brand", "event_time", "price", "running_sales").limit(30))
+```
+
+```python
+from pyspark.sql import functions as F, types as T
+
+rows_customers = [
+    (1, "Asha", "IN", True),
+    (2, "Bob", "US", False),
+    (3, "Chen", "CN", True),
+    (4, "Diana", "US", None),
+    (None, "Ghost", "UK", False),      # NULL key to dem
+]
+
+rows_orders = [
+    (101, 1, 120.0, "IN"),
+    (102, 1, 80.0, "IN"),
+    (103, 2, 50.0, "US"),
+    (104, 5, 30.0, "DE"),             # no matching cus
+    (105, 3, 200.0, "CN"),
+    (106, None, 15.0, "UK"),          # NULL key won't
+    (107, 3, 40.0, "CN"),
+    (108, 2, 75.0, "US"),
+]
+
+schema_customers = T.StructType([
+    T.StructField("customer_id", T.IntegerType(), True),
+    T.StructField("name",        T.StringType(),  True),
+    T.StructField("country",     T.StringType(),  True),
+    T.StructField("vip",         T.BooleanType(), True),
+])
+
+schema_orders = T.StructType([
+    T.StructField("order_id",    T.IntegerType(), True),
+    T.StructField("customer_id", T.IntegerType(), True),
+    T.StructField("amount",      T.DoubleType(),  True),
+    T.StructField("country",     T.StringType(),  True), # same column name to show collisions
+])
+
+df_customers = spark.createDataFrame(rows_customers, schema_customers)
+df_orders    = spark.createDataFrame(rows_orders,    schema_orders)
+
+display(df_customers)
+display(df_orders)
+```
+
+```python
+df_inner =df_orders.join(df_customers,on='customer_id',how='inner')
+display(df_inner)
+```
+```python
+df_left=df_orders.join(df_customers,on='customer_id',how='left')
+display(df_left)
+```
+
+```python
+df_full = df_orders.join(df_customers,on='customer_id',how='full')
+display(df_full)
+```
+
+```python
+df_full = df_orders.join(df_customers,on='customer_id',how='left_semi')
+display(df_full)
+```
+
+```python
+df_full = df_orders.join(df_customers,on='customer_id',how='left_anti')
+display(df_full)
+```
+
