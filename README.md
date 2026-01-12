@@ -1,7 +1,7 @@
 # IDC Databricks 14 Days AI Challenge
 
 
-## Day 1 :
+## Day 1 - Platform Setup & First Steps✅
 
 - Today wasn’t just about creating an account or running Spark commands.
 - It was the day I truly understood why Databricks exists. At the start, I was honestly overwhelmed.
@@ -127,7 +127,7 @@ nov_events.show(5, truncate=False)
 ------------------------------
 -----------------------------
 
-## Day 2 – Apache Spark Fundamentals⚡
+## Day 2 – Apache Spark Fundamentals✅
 
 ### Read the files from Volume
 ```python
@@ -288,7 +288,22 @@ len(files)
 -------------------------------
 --------------------------------
 
-## Day 3 :
+## Day 3 – PySpark Transformations Deep Dive ✅
+#### Pandas vs Spark 
+#### Pandas :
+ - Works on a single machine
+ - Loads data entirely into memory
+ - Best for small to medium datasets
+ - Executes operations immediately
+ - Limited by RAM & CPU
+
+#### Apache Spark :
+ - Works in a distributed environment
+ - Processes data across multiple machines
+ - Handles millions to billions of rows
+ - Uses lazy evaluation (executes only when needed)
+ - Optimized automatically via DAG & Catalyst
+ - Built for production-scale analytics
 ### Sample Dataset for practise
 
 ```python
@@ -489,4 +504,57 @@ display(df_full)
 df_full = df_orders.join(df_customers,on='customer_id',how='left_anti')
 display(df_full)
 ```
+## Day 4 - Delta Lake Introduction✅
+
+What I learned today :
+
+What is Delta Lake ?
+Delta Lake is a storage layer built on top of Parquet that makes data reliable, safe, and production-ready.
+
+CSV / Parquet Problems :
+ - No safety
+ - No version history
+ - Easy to break data
+
+Delta Lake Benefits :
+ - Reliable writes
+ - Schema safety
+ - Time travel (rollback)
+-------------------------------------------------
+Schema Enforcement (Delta = Strict Teacher)
+Delta Lake enforces the schema you define, Bad data is rejected, not silently accepted.
+
+Without schema enforcement :
+ - CSV allows anything
+ - Strings in numeric columns
+
+With Delta :
+ - Errors caught immediately
+ - Cleaner pipelines
+ - Less debugging
+-------------------------------------------------
+How ACID Transactions works in Delta Tables
+
+1️⃣Atomicity (All or Nothing) :
+ - ₹1,000 is debited from Account A
+ - ₹1,000 is credited to Account B
+ - If the system crashes after debiting A but before crediting B
+ - Transaction is rolled back
+ - Either both debit & credit happen or neither happen
+
+2️⃣ Consistency (Rules Must Hold) :
+ - A transaction must follow all business rules and constraints.
+ - Account balance cannot be negative
+ - Total money in system must remain constant
+ - If Account A has only ₹500 →transfer of ₹1,000 is rejected
+
+3️⃣Isolation (No dirty reads) :
+ - Multiple transactions can run simultaneously without affecting each other
+ - The user won’t see half-updated data
+ - They see either Balance before transfer or balance after transfer
+
+4️⃣Durability (Once Committed, Always Saved) :
+ - Once a transaction is committed, it cannot be lost.
+ - Let's consider transfer is successful and System crashes immediately
+ - System restarts: Debit & credit still exist & Bank records remain accurate
 
