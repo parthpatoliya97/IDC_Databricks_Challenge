@@ -557,4 +557,41 @@ How ACID Transactions works in Delta Tables
  - Once a transaction is committed, it cannot be lost.
  - Let's consider transfer is successful and System crashes immediately
  - System restarts: Debit & credit still exist & Bank records remain accurate
+------------------------------------------------------------------------
+---------------------------------------------------
+## Day 5 - Delta Lake Advanced✅
+
+### What I learned today :
+
+#### 1️⃣ Time Travel (Version History) :
+ - Delta tables remember every change.
+ - Every update or insert creates a new version
+ - I can query past versions of data
+ - This makes debugging, auditing, and rollback possible
+
+#### 2️⃣ MERGE Operations (Upserts) :
+ - Instead of deleting, rewriting or creating duplicates
+ - I used MERGE to update existing records
+ - insert new records in one command
+ - This is how real-world CDC and SCD pipelines work.
+
+#### 3️⃣ OPTIMIZE & ZORDER :
+ - I learned that data isn’t just about correctness - performance matters.
+ - OPTIMIZE : compacts small files
+ - ZORDER : intelligently organizes data for faster filtering
+
+#### 4️⃣ VACUUM (Cleanup) :
+ - Behind every update or merge, old files remain.
+ - VACUUM safely removes unused data
+ - Reduces storage clutter
+ - Keeps the system clean
+ - Production systems need housekeeping too.
+
+💡Using managed Delta tables (saveAsTable), I was able to :
+ - avoid complex storage paths
+ - skip volume-level headaches
+ - focus purely on data logic
+ - Databricks handled storage, metadata, versioning automatically.
+------------------------------------------------------------------------
+---------------------------------------------------
 
