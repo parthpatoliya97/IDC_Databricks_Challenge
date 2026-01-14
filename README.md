@@ -625,8 +625,8 @@ How ACID Transactions works in Delta Tables
     - 👉 Gold is NOT always null-free — it depends on business needs
     - Applied proper logic to handle nulls (filter or replace, not panic 😄)
 
-🧠 Key Real-World Insights :
-✅ Don’t delete Silver data just because Gold has nulls
-✅ Cleaning rules belong in Gold, not Bronze
-✅ Business logic > perfect-looking data
-✅ Large datasets expose real problems — and real learning
+#### 🧠 Key Real-World Insights :
+ - ✅ Don’t delete Silver layer data just because Gold layer has nulls
+ - ✅ Cleaning rules belong in Gold, not Bronze
+ - ✅ Business logic > perfect-looking data
+ - ✅ Large datasets expose real problems — and real learning
