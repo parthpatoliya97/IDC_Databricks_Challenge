@@ -594,4 +594,39 @@ How ACID Transactions works in Delta Tables
  - Databricks handled storage, metadata, versioning automatically.
 ------------------------------------------------------------------------
 ---------------------------------------------------
+## Day - 6 Medallion Architecture✅
 
+### 📊 Dataset Reality Check :
+- October 2019 events → 42M+ rows
+- November 2019 events → 67M+ rows
+- Real schema, real nulls, real challenges
+- This felt like solving an industry-grade problem, not a tutorial 💯
+
+### What I Learned & Built Today :
+- 🔹 Medallion Architecture (Bronze → Silver → Gold)
+    - Instead of doing everything in one step, I learned how data flows in layers:
+
+#### 🥉 Bronze Layer
+- Raw ingestion from CSV
+- No transformations
+- Just store data as-is (trust the source, question later)
+
+#### 🥈 Silver Layer
+- Schema validation
+ - Checked null values column-wise
+ - Identified duplicate records
+ - Applied data cleaning rules without losing raw data
+
+#### 🥇 Gold Layer
+- Business-ready data
+- Filtered only purchase events
+
+- Learned an important lesson:
+    - 👉 Gold is NOT always null-free — it depends on business needs
+    - Applied proper logic to handle nulls (filter or replace, not panic 😄)
+
+🧠 Key Real-World Insights :
+✅ Don’t delete Silver data just because Gold has nulls
+✅ Cleaning rules belong in Gold, not Bronze
+✅ Business logic > perfect-looking data
+✅ Large datasets expose real problems — and real learning
