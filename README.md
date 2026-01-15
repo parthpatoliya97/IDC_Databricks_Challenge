@@ -630,3 +630,62 @@ How ACID Transactions works in Delta Tables
  - ✅ Cleaning rules belong in Gold, not Bronze
  - ✅ Business logic > perfect-looking data
  - ✅ Large datasets expose real problems — and real learning
+-------------------------------------------------------------
+-------------------------------------------------------------
+Day 7 - Workflows & Job Orchestration✅
+
+Key Concepts :
+🔹 Databricks Notebooks vs Jobs
+ - Notebook → A place where you write and test code (like a lab).
+ - Job → A way to run notebooks automatically in the correct order 
+
+Example:
+I may run a notebook manually today to clean data, but a Job runs the same notebook every night at 2 AM without manual effort.
+---------------------------------------------------------------------------
+🔹 Multi-task Workflows
+ - A workflow is made of multiple tasks.
+ - Each task usually runs a separate notebook.
+ - Tasks can depend on each other.
+
+Example:
+Task 1: Load raw data (Bronze)
+Task 2: Clean data (Silver) → runs only after Task 1
+Task 3: Aggregate data (Gold) → runs only after Task 2
+This ensures correct order and data quality.
+---------------------------------------------------------------------------
+🔹 Parameters & Scheduling
+ - Parameters make notebooks reusable by passing values at runtime.
+ - Scheduling automates when jobs run.
+
+Example:
+Instead of hardcoding a file path, I pass it as a parameter:
+Today → October data
+Tomorrow → November data
+Same notebook, different inputs.
+And scheduling lets the job run daily or hourly automatically.
+---------------------------------------------------------------------------
+🔹 Error Handling
+ - Helps detect failures and stop incorrect data from moving forward.
+ - If one task fails, dependent tasks don’t run.
+
+Example:
+If the Silver layer fails due to null values, the Gold layer won’t run, preventing wrong business metrics.
+---------------------------------------------------------------------------
+What I learned today:
+ - Difference between Databricks Notebooks vs Jobs
+ - How multi-task workflows work in real projects
+ - Setting task dependencies (Bronze → Silver → Gold)
+ - When and why to use job & task parameters
+ - Understanding scheduling, execution flow, and monitoring
+ - Debugging slow runs and understanding cluster behavior (Free Edition realities)
+---------------------------------------------------------------------------
+🛠️ What I worked on:
+ - Created an end-to-end Medallion Architecture workflow
+ - Orchestrated Bronze, Silver, and Gold layers as separate job tasks
+ - Configured task dependencies to ensure correct execution order
+ - Successfully executed the full pipeline using Databricks Jobs
+ - Explored parameterized notebooks for scalable pipeline design
+ - Learned when parameters are optional vs necessary in real pipelines
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
