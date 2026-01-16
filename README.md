@@ -689,3 +689,36 @@ How ACID Transactions works in Delta Tables
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 
+## Day 8 of Databricks 14 Days Challenge - Unity Catalog Governance ✅
+
+#### What I Learned Today :
+🔹 Catalog → Schema → Table hierarchy :
+ - Catalog = Database domain (e.g., ecommerce)
+ - Schema = Data layer (bronze, silver, gold)
+ - Table = Actual data
+
+🔹 Access Control (GRANT / REVOKE) :
+ - Unity Catalog allows fine-grained permissions
+ - Data Engineers → Read & Write
+ - Data Analysts → Read-only
+
+🔹 Managed vs External Tables :
+ - Managed tables → Databricks manages storage & lifecycle
+ - External tables → Storage managed outside Databricks
+ - Governance becomes easier when ownership is clearly defined.
+
+🔹 Data Lineage :
+ - Helps track where data comes from and how it flows across Bronze → Silver → Gold — crucial for debugging and audits.
+
+🔹 Views for Controlled Access :
+ - Instead of exposing raw tables, views act as a secure data contract for analysts by hiding sensitive or unnecessary columns.
+
+#### What I Built & Worked On Today :
+ - Created an ecommerce catalog
+ - Designed Bronze, Silver, Gold schemas aligned with Medallion Architecture
+ - Registered Delta tables inside Unity Catalog
+ - Created Data Engineer & Data Analyst roles
+ - Assigned role-based permissions using GRANT / REVOKE
+ - Ensured: Engineers → Read & Write access & Analysts → Read-only access
+ - Created a Gold-layer view for controlled analyst access
+
